@@ -45,7 +45,7 @@ ccc ooo M xxxx m yyyy
         110 : ss,ls, if 'S' Sign flag set, if lesser ( using SUB as comparator, before execution destination is below source)
         111, not a condition : marker for immediate assign ( see AR0 below)
 
-ccc 0000110 oo xxxx  ( for invalids  "CPY R12, Rx" and "CPY R13, Rx" and "CPY R12, [Rx]" and "CPY R13, [Rx]")
+ccc 0000110 oo xxxx  ( for invalids  "CPY R12, Rx" and "CPY R13, Rx" and "CPY R12, [Rx]" and "CPY R13, [Rx]") no implicit flag modification. 
     ccc: same as above
     xxxx: register number
     oo: instructions
@@ -59,3 +59,4 @@ ccc 0000110 oo xxxx  ( for invalids  "CPY R12, Rx" and "CPY R13, Rx" and "CPY R1
 
 Branching is done by having destination register R15 (any instruction is valid, but CPY is prefered)
 At CPU reset all register is set to zero (except R13, always with value 1), first instruction at address 0
+when R15 (PC) is 0xFFFF the instruction at 0xFFFF is not executed and the CPU halt.
