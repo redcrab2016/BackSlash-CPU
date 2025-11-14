@@ -17,7 +17,7 @@ R13, One : One (always value 1)
 R14, Flag,: Flag ( ____  SOZC) S sign, O signed overflow, Z zero, C carry
 R15, PC : Porgram counter
 
-16 bits intruction: 17 mnemonic CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0, SAR, XOR, SIL, SIR, R2C, C2R, SB0, CB0
+16 bits intruction: 27 mnemonic CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0, SAR, XOR, SIL, SIR, R2C, C2R, SB0, CB0, NEG, B2W, W2B, SWP, SL4, SL8, SR4, SR8, BRB, BRF
 ccc ooo M xxxx m yyyy
     xxxx : register destination
     yyyy : register source
@@ -27,14 +27,14 @@ ccc ooo M xxxx m yyyy
         10 : xxxx destination register for memory address, yyyy source register  (from register to memory, ex: "CPY [R0], R1")
         11 : xxxx destination register for memory address, yyyy source register for memory address (from memory to memory, ex: "CPY [R0], [R1]")
     ooo : instruction (modify flag, except CPY , AR0 and invalids CPY/NOT)
-        000 : CPY, copy data from source to destination, does not modify flag, destination register can't be R12 or R13 or [R12] or [R13] (see below "ccc 0000110 oo xxxx" for behavior)
-        001 : NOT, destination = !source . destination register can't be R12 or R13 or [R12] or [R13] (see below "ccc 0010110 oo xxxx" for behavior)
+        000 : CPY, copy data from source to destination, does not modify flag, destination register can't be R12 or R13 or [R12] or [R13] (see below "ccc 0000110 oo xxxx" and "ccc 0001110 oo xxxx" for behavior)
+        001 : NOT, destination = !source . destination register can't be R12 or R13 or [R12] or [R13] (see below "ccc 0010110 oo xxxx" and "ccc 0011110 oo xxxx" for behavior)
         010 : ADD, destination = destination + source
         011 : SUB, destination = destination - source
         100 : AND, destination = destination & source
         101 : OR, destination = destination | source
-        110 : SHL, destination = destination << source (only 4 LSb of source are taken into account)
-        111 : SHR, destination = destination >> source (only 4 LSb of source are taken into account)
+        110 : SHL, destination = destination << source (only 4 LSb of source are taken into account), destination register can't be R12 or R13 or [R12] or [R13] (see below "ccc 110x110 xxxxxx" for behavior)
+        111 : SHR, destination = destination >> source (only 4 LSb of source are taken into account), destination register can't be R12 or R13 or [R12] or [R13] (see below "ccc 111x110 xxxxxx" for behavior)
     ccc : condition to execute the instruction
         000 : al, always
         001 : cs, ae, if 'C' Carry flag set  (when result of ADD/SUB is below/above of before execution of destination value), when last evacuated bit by SHL/SHR is one
@@ -62,6 +62,34 @@ ccc 0010110 oo xxxx  ( behavior for invalids  "NOT R12, Rx" and "not R13, Rx" an
         01 : C2R xxxx : value of bit xxxx of register R0 is set with C flag
         10 : SB0 xxxx : set the xxxx bit (0 to 15) of Register R0
         11 : CB0 xxxx : clear the xxxx bit (0 to 15) of Register R0
+
+ccc 0001110 oo xxxx  ( behavior for invalids  "CPY [R12], Rx" and "CPY [R13], Rx" and "CPY [R12], [Rx]" and "CPY [R13], [Rx]") no implicit flag modification. 
+    ccc: same as above
+    xxxx: register number or immediate (0 to 15)
+    oo: instructions
+        00 : NEG Rx : Negate register value  : Rx = -Rx
+        01 : B2W Rx: extend the sign of Rx LSB: example : Rx = 0x0081 => 0xFF81, Rx = 0x007E => 0x007E, Rx = 0x1234 => 0x0034, Rx = 0x129F => 0xFF9F
+        10 : W2B Rx : set Rx MSB to zero: ewample : Rx = 0x1234 => 0x0034
+        11 : SWP Rx : swap Rx LSB with MSB: example : Rx = 0x1234 => 0x3412
+
+ccc 0011110 oo xxxx  ( behavior for invalids  "NOT [R12], Rx" and "not [R13], Rx" and "NOT [R12], [Rx]" and "NOT [R13], [Rx]") implicit flag modification. (Carry, Zero)
+    ccc: same as above
+    xxxx: immediate between 0 and 15
+    oo: instructions
+        00 : SL4 Rx : Shift register Rx 4 bits to the left. Rx = Rx << 4
+        01 : SL8 Rx : Shift register Rx 8 bits to the left. Rx = Rx << 8
+        10 : SR4 Rx : Shift register Rx 4 bits to the right. Rx = Rx >> 4
+        11 : SR8 Rx : Shift register Rx 8 bits to the right. Rx = Rx >> 8
+
+ccc 110x110 xxxxxx  ( behavior for invalids  "SHL R12, Rx" and "SHL R13, Rx" and "SHL R12, [Rx]" and "SHL R13, [Rx]" including the [R12] and [R13] destination) no implicit flag modification. 
+    ccc: same as above
+    xxxxxxx: immediate from 0 to 127
+    BRB xxxxxx: Branch backward , set R15 (PC) relatively backward : R15 = R15 - xxxxxx
+
+ccc 111x110 xxxxxx  ( behavior for invalids  "SHR R12, Rx" and "SHR R13, Rx" and "SHR R12, [Rx]" and "SHR R13, [Rx]" including the [R12] and [R13] destination) no implicit flag modification. 
+    ccc: same as above
+    xxxxxxx: immediate from 0 to 127
+    BRF xxxxxx: Branch forward , set R15 (PC) relatively forward : R15 = R15 + xxxxxx
 
 111 sss iiiiiiiiii : Immediate assign to register R0 (no flag modified), always execute (no ccc conditional execution)
     AR0 : assign to regiter R0, R0 = iiiiiiiiii << sss : i = 0 to 1023, s from 0 to 7
