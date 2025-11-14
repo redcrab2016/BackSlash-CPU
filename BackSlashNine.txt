@@ -21,7 +21,7 @@ R15, PC : Porgram counter
 ccc ooo M xxxx m yyyy
     xxxx : register destination
     yyyy : register source
-    Mm : register or memory adress referenced by register 
+    Mm : register or memory address referenced by register 
         00 : xxxx destination register, yyyy source register  ( from register to register, ex:  "CPY R0, R1")
         01 : xxxx destination register, yyyy source register for memory address (from memory to register, ex: "CPY R0, [R1]")
         10 : xxxx destination register for memory address, yyyy source register  (from register to memory, ex: "CPY [R0], R1")
