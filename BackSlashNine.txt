@@ -15,7 +15,7 @@ R11 : General (e.g address, backup of R15 when "CPY R15,..." and "JMP xxx" are e
 R12, Zero : Zero (always value 0)
 R13, One : One (always value 1)
 R14, Flag,: Flag ( ____  SOZC) S sign, O signed overflow, Z zero, C carry
-R15, PC : Porgram counter
+R15, PC : Program counter
 
 16 bits intruction: 26 mnemonics CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0, SAR, XOR, SIL, SIR, R2C, C2R, SB0, CB0, NEG, B2W, W2B, SWP, SL4, SL8, SR4, SR8, JMP
 ccc ooo M xxxx m yyyy
