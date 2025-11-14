@@ -12,10 +12,10 @@ R8  : General (e.g address)
 R9  : General (e.g address)
 R10 : General (e.g address)
 R11 : General (e.g address)
-R12 : Zero (always value 0)
-R13 : One ( always value 1)
-R14 : Flag ( ____  SOZC) S sign, O signed overflow, Z zero, C carry
-R15 : Porgram counter
+R12, Zero : Zero (always value 0)
+R13, One : One ( always value 1)
+R14, Flag,: Flag ( ____  SOZC) S sign, O signed overflow, Z zero, C carry
+R15, PC : Porgram counter
 
 16 bits intruction, CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0
 ccc ooo mm xxxx yyyy
@@ -33,8 +33,8 @@ ooo : instruction (modify flag, except CPY and AR0)
     011 : NOT, destination = !source
     100 : AND, destination = destination & source
     101 : OR, destination = destination | source
-    110 : SHL, destination = destination << source
-    111 : SHR, destination = destination >> source
+    110 : SHL, destination = destination << source (only 4 LSb of source are taken into account)
+    111 : SHR, destination = destination >> source (only 4 LSb of source are taken into account)
 ccc : condition to execute the instruction
     000 : al, always
     001 : cs, if 'C' Carry flag set  (when result of ADD/SUB is below/above of before execution of destination value), when last evacuated bit by SHL/SHR is one
