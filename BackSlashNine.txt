@@ -17,7 +17,7 @@ R13, One : One (always value 1)
 R14, Flag,: Flag ( ____  SOZC) S sign, O signed overflow, Z zero, C carry
 R15, PC : Porgram counter
 
-16 bits intruction: 27 mnemonic CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0, SAR, XOR, SIL, SIR, R2C, C2R, SB0, CB0, NEG, B2W, W2B, SWP, SL4, SL8, SR4, SR8, BRB, BRF
+16 bits intruction: 27 mnemonics CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0, SAR, XOR, SIL, SIR, R2C, C2R, SB0, CB0, NEG, B2W, W2B, SWP, SL4, SL8, SR4, SR8, BRB, BRF
 ccc ooo M xxxx m yyyy
     xxxx : register destination
     yyyy : register source
