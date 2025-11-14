@@ -17,7 +17,7 @@ R13, One : One (always value 1)
 R14, Flag,: Flag ( ____  SOZC) S sign, O signed overflow, Z zero, C carry
 R15, PC : Porgram counter
 
-16 bits intruction, CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0
+16 bits intruction: 17 mnemonic CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0, SAR, XOR, SIL, SIR, R2C, C2R, SB0, CB0
 ccc ooo M xxxx m yyyy
     xxxx : register destination
     yyyy : register source
@@ -51,8 +51,8 @@ ccc 0000110 oo xxxx  ( behavior for invalids  "CPY R12, Rx" and "CPY R13, Rx" an
     oo: instructions
         00 : SAR R0,Rx : Arithmetic shift right  : R0 = R0 >> Rx (keep sign bit)
         01 : XOR R0,Rx: Exlusive Or ; R0 = R0 xor Rx
-        10 : SHL xxxx : R0 = R0 << xxxx
-        11 : SHR xxxx : R0 = R0 >> xxxx
+        10 : SIL xxxx : R0 = R0 << xxxx
+        11 : SIR xxxx : R0 = R0 >> xxxx
 
 ccc 0010110 oo xxxx  ( behavior for invalids  "NOT R12, Rx" and "not R13, Rx" and "NOT R12, [Rx]" and "NOT R13, [Rx]") no implicit flag modification. 
     ccc: same as above
@@ -63,7 +63,7 @@ ccc 0010110 oo xxxx  ( behavior for invalids  "NOT R12, Rx" and "not R13, Rx" an
         10 : SB0 xxxx : set the xxxx bit (0 to 15) of Register R0
         11 : CB0 xxxx : clear the xxxx bit (0 to 15) of Register R0
 
-111 sss ii iiii iiii : Immediate assign to register R0 (no flag modified), always execute (no ccc conditional execution)
+111 sss iiiiiiiiii : Immediate assign to register R0 (no flag modified), always execute (no ccc conditional execution)
     AR0 : assign to regiter R0, R0 = iiiiiiiiii << sss : i = 0 to 1023, s from 0 to 7
 
 Branching is done by having destination register R15 (any instruction is valid, but CPY is prefered)
