@@ -13,7 +13,7 @@ R9  : General (e.g address)
 R10 : General (e.g address)
 R11 : General (e.g address)
 R12, Zero : Zero (always value 0)
-R13, One : One ( always value 1)
+R13, One : One (always value 1)
 R14, Flag,: Flag ( ____  SOZC) S sign, O signed overflow, Z zero, C carry
 R15, PC : Porgram counter
 
@@ -26,11 +26,11 @@ ccc ooo M xxxx m yyyy
         01 : xxxx destination register, yyyy source register for memory address (from memory to register, ex: "CPY R0, [R1]")
         10 : xxxx destination register for memory address, yyyy source register  (from register to memory, ex: "CPY [R0], R1")
         11 : xxxx destination register for memory address, yyyy source register for memory address (from memory to memory, ex: "CPY [R0], [R1]")
-    ooo : instruction (modify flag, except CPY and AR0)
-        000 : CPY, copy data from source to destination, does not modify flag, destination register can't be R12 and R13 but can be [R12] and [R13]
-        001 : ADD, destination = destination + source
-        010 : SUB, destination = destination - source
-        011 : NOT, destination = !source
+    ooo : instruction (modify flag, except CPY , AR0 and invalids CPY/NOT)
+        000 : CPY, copy data from source to destination, does not modify flag, destination register can't be R12 or R13 or [R12] or [R13] (see below "ccc 0000110 oo xxxx" for behavior)
+        001 : NOT, destination = !source . destination register can't be R12 or R13 or [R12] or [R13] (see below "ccc 0010110 oo xxxx" for behavior)
+        010 : ADD, destination = destination + source
+        011 : SUB, destination = destination - source
         100 : AND, destination = destination & source
         101 : OR, destination = destination | source
         110 : SHL, destination = destination << source (only 4 LSb of source are taken into account)
@@ -45,18 +45,27 @@ ccc ooo M xxxx m yyyy
         110 : ss,ls, if 'S' Sign flag set, if lesser ( using SUB as comparator, before execution destination is below source)
         111, not a condition : marker for immediate assign ( see AR0 below)
 
-ccc 0000110 oo xxxx  ( for invalids  "CPY R12, Rx" and "CPY R13, Rx" and "CPY R12, [Rx]" and "CPY R13, [Rx]") no implicit flag modification. 
+ccc 0000110 oo xxxx  ( behavior for invalids  "CPY R12, Rx" and "CPY R13, Rx" and "CPY R12, [Rx]" and "CPY R13, [Rx]") no implicit flag modification. 
     ccc: same as above
-    xxxx: register number
+    xxxx: register number or immediate (0 to 15)
     oo: instructions
         00 : SAR R0,Rx : Arithmetic shift right  : R0 = R0 >> Rx (keep sign bit)
         01 : XOR R0,Rx: Exlusive Or ; R0 = R0 xor Rx
+        10 : SHL xxxx : R0 = R0 << xxxx
+        11 : SHR xxxx : R0 = R0 >> xxxx
+
+ccc 0010110 oo xxxx  ( behavior for invalids  "NOT R12, Rx" and "not R13, Rx" and "NOT R12, [Rx]" and "NOT R13, [Rx]") no implicit flag modification. 
+    ccc: same as above
+    xxxx: immediate between 0 and 15
+    oo: instructions
+        00 : R2C xxxx : C flag is set with value of bit xxxx of register R0
+        01 : C2R xxxx : value of bit xxxx of register R0 is set with C flag
         10 : SB0 xxxx : set the xxxx bit (0 to 15) of Register R0
         11 : CB0 xxxx : clear the xxxx bit (0 to 15) of Register R0
 
-111 sss ii iiii iiii : Immediate assign to register R0 (no flag modified)
-    AR0 : assign to regiter R0, R0 =   iiiiiiiiii << sss : i = 0 to 1023, s from 0 to 7
+111 sss ii iiii iiii : Immediate assign to register R0 (no flag modified), always execute (no ccc conditional execution)
+    AR0 : assign to regiter R0, R0 = iiiiiiiiii << sss : i = 0 to 1023, s from 0 to 7
 
 Branching is done by having destination register R15 (any instruction is valid, but CPY is prefered)
-At CPU reset all register is set to zero (except R13, always with value 1), first instruction at address 0
-when R15 (PC) is 0xFFFF the instruction at 0xFFFF is not executed and the CPU halt.
+At CPU reset all registers are set to zero (except R13, always with value 1), first instruction at address 0
+when R15 (PC) is 0xFFFF the instruction at 0xFFFF is not executed and the CPU halt. (Address 0xFFFF can be use for data but not for instruction)
