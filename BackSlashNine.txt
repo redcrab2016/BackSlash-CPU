@@ -1,6 +1,6 @@
 BackSlash 9 : RISC full 16 bits only, each address does represent a 16 bits value in memory, 64Kili addresses for a total memory of 128 KiB
 16 registers
-R0  : General (e.g compute) 
+R0  : General (e.g compute and for immediate assignment, see AR0 instruction) 
 R1  : General (e.g compute) 
 R2  : General (e.g compute) 
 R3  : General (e.g compute) 
