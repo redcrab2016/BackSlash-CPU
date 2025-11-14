@@ -1,6 +1,6 @@
 BackSlash 9 : RISC full 16 bits only, each address does represent a 16 bits value in memory, 64Kili addresses for a total memory of 128 KiB
 16 registers
-R0  : General (e.g compute and for immediate assignment, see AR0 instruction) 
+R0  : General (e.g compute and for immediate assignment, see AR0 and other R0 dedicated instructions) 
 R1  : General (e.g compute) 
 R2  : General (e.g compute) 
 R3  : General (e.g compute) 
@@ -18,34 +18,43 @@ R14, Flag,: Flag ( ____  SOZC) S sign, O signed overflow, Z zero, C carry
 R15, PC : Porgram counter
 
 16 bits intruction, CPY, ADD, SUB, NOT, AND, OR, SHL, SHR, AR0
-ccc ooo mm xxxx yyyy
-xxxx : register destination
-yyyy : register source
-mm : register or memory adress referenced by register 
-    00 : xxxx destination register, yyyy source register  ( from register to register)
-    01 : xxxx destination register, yyyy source register for memory address (from memory to register)
-    10 : xxxx destination register for memory address, yyyy source register  (from register to memory)
-    11 : xxxx destination register for memory address, yyyy source register for memory address (from memory to memory)
-ooo : instruction (modify flag, except CPY and AR0)
-    000 : CPY, copy data from source to destination, does not modify flag
-    001 : ADD, destination = destination + source
-    010 : SUB, destination = destination - source
-    011 : NOT, destination = !source
-    100 : AND, destination = destination & source
-    101 : OR, destination = destination | source
-    110 : SHL, destination = destination << source (only 4 LSb of source are taken into account)
-    111 : SHR, destination = destination >> source (only 4 LSb of source are taken into account)
-ccc : condition to execute the instruction
-    000 : al, always
-    001 : cs, if 'C' Carry flag set  (when result of ADD/SUB is below/above of before execution of destination value), when last evacuated bit by SHL/SHR is one
-    010 : cc, if 'C' Carry flag clear (when result of ADD/SUB is above/below of before execution of destination value), when last evacuated bit by SHL/SHR is zero
-    011 : zs, if 'Z' Zero flag set ( using SUB as comparator, before execution source equal destination), when result of instruction is equal to zero
-    100 : zc, if 'Z' Zero flag clear (using SUB as comparator, before execution source is not equal to destination), when result of instruction is not equal to zero
-    101 : ab, if above ( using SUB as comparator, before execution destination is above source, )
-    110 : be, if below ( using SUB as comparator, before execution destination is below source)
-    111, not a condition : marker for immediate assign
+ccc ooo M xxxx m yyyy
+    xxxx : register destination
+    yyyy : register source
+    Mm : register or memory adress referenced by register 
+        00 : xxxx destination register, yyyy source register  ( from register to register, ex:  "CPY R0, R1")
+        01 : xxxx destination register, yyyy source register for memory address (from memory to register, ex: "CPY R0, [R1]")
+        10 : xxxx destination register for memory address, yyyy source register  (from register to memory, ex: "CPY [R0], R1")
+        11 : xxxx destination register for memory address, yyyy source register for memory address (from memory to memory, ex: "CPY [R0], [R1]")
+    ooo : instruction (modify flag, except CPY and AR0)
+        000 : CPY, copy data from source to destination, does not modify flag, destination register can't be R12 and R13 but can be [R12] and [R13]
+        001 : ADD, destination = destination + source
+        010 : SUB, destination = destination - source
+        011 : NOT, destination = !source
+        100 : AND, destination = destination & source
+        101 : OR, destination = destination | source
+        110 : SHL, destination = destination << source (only 4 LSb of source are taken into account)
+        111 : SHR, destination = destination >> source (only 4 LSb of source are taken into account)
+    ccc : condition to execute the instruction
+        000 : al, always
+        001 : cs, ae, if 'C' Carry flag set  (when result of ADD/SUB is below/above of before execution of destination value), when last evacuated bit by SHL/SHR is one
+        010 : cc, bl, if 'C' Carry flag clear (when result of ADD/SUB is above/below of before execution of destination value), when last evacuated bit by SHL/SHR is zero
+        011 : zs, eq, if 'Z' Zero flag set ( using SUB as comparator, before execution source equal destination), when result of instruction is equal to zero
+        100 : zc, ne, if 'Z' Zero flag clear (using SUB as comparator, before execution source is not equal to destination), when result of instruction is not equal to zero
+        101 : sc,ge, if 'S' Sign flag clear, if greater or equal ( using SUB as comparator, before execution destination is above source, )
+        110 : ss,ls, if 'S' Sign flag set, if lesser ( using SUB as comparator, before execution destination is below source)
+        111, not a condition : marker for immediate assign ( see AR0 below)
 
-111 sss ii iiii iiii : Immediate assign to register R0 ( not flag modified)
+ccc 0000110 oo xxxx  ( for invalids  "CPY R12, Rx" and "CPY R13, Rx" and "CPY R12, [Rx]" and "CPY R13, [Rx]")
+    ccc: same as above
+    xxxx: register number
+    oo: instructions
+        00 : SAR R0,Rx : Arithmetic shift right  : R0 = R0 >> Rx (keep sign bit)
+        01 : XOR R0,Rx: Exlusive Or ; R0 = R0 xor Rx
+        10 : SB0 xxxx : set the xxxx bit (0 to 15) of Register R0
+        11 : CB0 xxxx : clear the xxxx bit (0 to 15) of Register R0
+
+111 sss ii iiii iiii : Immediate assign to register R0 (no flag modified)
     AR0 : assign to regiter R0, R0 =   iiiiiiiiii << sss : i = 0 to 1023, s from 0 to 7
 
 Branching is done by having destination register R15 (any instruction is valid, but CPY is prefered)
