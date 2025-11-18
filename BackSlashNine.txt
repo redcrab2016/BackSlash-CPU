@@ -66,7 +66,7 @@ ccc 0010110 oo xxxx  ( behavior for invalids  "NOT R12, Rx" and "not R13, Rx" an
 
 ccc 0001110 oo xxxx  ( behavior for invalids  "CPY [R12], Rx" and "CPY [R13], Rx" and "CPY [R12], [Rx]" and "CPY [R13], [Rx]") no implicit flag modification. 
     ccc: same as above
-    xxxx: register number or immediate (0 to 15)
+    xxxx: register number
     oo: instructions
         00 : NEG Rx : Negate register value  : Rx = -Rx ( Rx = not RX + 1)
         01 : B2W Rx: extend the sign of Rx LSB: example : Rx = 0x0081 => 0xFF81, Rx = 0x007E => 0x007E, Rx = 0x1234 => 0x0034, Rx = 0x129F => 0xFF9F
@@ -75,7 +75,7 @@ ccc 0001110 oo xxxx  ( behavior for invalids  "CPY [R12], Rx" and "CPY [R13], Rx
 
 ccc 0011110 oo xxxx  ( behavior for invalids  "NOT [R12], Rx" and "not [R13], Rx" and "NOT [R12], [Rx]" and "NOT [R13], [Rx]") implicit flag modification. (Carry, Zero)
     ccc: same as above
-    xxxx: immediate between 0 and 15
+    xxxx: register number
     oo: instructions
         00 : SL4 Rx : Shift register Rx 4 bits to the left. Rx = Rx << 4
         01 : SL8 Rx : Shift register Rx 8 bits to the left. Rx = Rx << 8
@@ -87,8 +87,8 @@ ccc 11sx110 xxxxxx  ( behavior for invalids  "SHL/SHR R12, Rx" and "SHL/SHR R13,
     sxxxxxxx: immediate signed from -128 to +127
     JMP sxxxxxxx: relative branching , set R15 (PC) relatively : R11 = R15, R15 = R15 + sxxxxxxx
 
-111 sss iiiiiiiiii : Immediate assign to register R0 (no flag modified), always execute (no ccc conditional execution)
-    AR0 : assign to regiter R0, R0 = iiiiiiiiii << sss : i = 0 to 1023, s from 0 to 7
+111 s iiiiiiiiiiii : Immediate assign to register R0 (no flag modified), always execute (no ccc conditional execution)
+    AR0 : assign to regiter R0, R0 = iiiiiiiiiiii << (s*4) : i = 0 to 4095, s as 0 or 1
 
 Branching is done by having destination register R15 (PC) (any instruction is valid, but CPY is prefered for absolute branching and JMP for relative small branching (with CPY and JMP, R15 is saved in R11 before R15 changement)
 At CPU reset all registers are set to zero (except R13, always with value 1), first instruction at address 0
