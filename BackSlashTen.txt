@@ -1,0 +1,79 @@
+BackSlash 10
+8/16 bits data. 8 bits is a byte, 16 bits is a word.
+16 bits address.
+LSB means Less Significant Byte of a word.
+MSB means Most Significant Byte of a word.
+Each memory address represent a byte. 
+16 bits data (not instruction) value is stored in memory little-end: LSB is stored in an address before the address of the MSB.
+Each instruction is represented by a word, stored in memory big-endian:  MSB is stored in an address before the address of the LSB.
+
+1) CPU Registers:
+16 16-bits registers, from W0 to W15.
+16 8-bits registers, from B0 to B15
+The 8-bits registers from B0 to B15 are embedded inside the registers W0 to W7, and can be designated with an alias name.
+
+B0 (alias L0) is LSB of W0
+B1 (alias H0) is MSB of W0
+B2 (alias L1) is LSB of W1
+B3 (alias H1) is MSB of W1
+B4 (alias L2) is LSB of W2
+B5 (alias H2) is MSB of W2
+B6 (alias L3) is LSB of W3
+B7 (alias H3) is MSB of W3
+B8 (alias L4) is LSB of W4
+B9 (alias H4) is MSB of W4
+B10 (alias L5) is LSB of W5
+B11 (alias H5) is MSB of W5
+B12 (alias L6) is LSB of W6
+B13 (alias H6) is MSB of W6
+B14 (aliases L7 and ONE8) is LSB of W7
+B15 (aliases H7 and ZERO8) is MSB of W7
+Each 16 bits registers from W7 to W15 have one or more alias name.
+ONE16 is alias of W7
+ZERO16 is alias of W8
+ST is alias of W9
+SF is alias of W10
+SA is alias of W11
+DA is alias of W12
+RA is alias of W13
+FG is alias of W14
+PC is alias of W15
+
+The register W7 is always with value 1 (can't be altered), therefore the register aliases ONE8 ONE16 have always the value 1, alias ZERO8 have always have the value 0.
+The register W8 is always with value 0 (can't be altered), therefore the register aliases ZERO16 have always the value 0.
+The register W15 (alias PC) is dedicated to represent the address of the next instruction to execute. only even address. If it does represent an odd address, the less significant bit of register W15 is ignored.
+If the register W15 (alias PC) have value 65535 (0xffff in hexadecimal) the CPU halt.
+The register W14 (alias FG) is dedicated to keep the flags.(TODO: explain each bit in flag)
+The register W13 (alias RA) is set with the value of register W15 (alias PC) before register W15 is modified with a new value from another register (Absolute address branching)
+The register W12 (alias DA) is conventionaly used to represent a destination address
+The register W11 (alias SA) is conventionaly used to represent a source address
+The register W10 (alias SF) is conventionaly used to represent a secondary stack pointer address (often based/relative to main stack pointer) where temporary values (variable) are stored. (stack frame for local variables)
+The register W9 (alias ST) is conventionaly used to represent the main stack pointer address.
+At reset time all register as set to value 0 except W7 (then B4 also) has alway the value 1.
+
+2) Addressing mode:
+Address used by non-Arithmetic_and_logic instructions are represented between brackets [].
+mode 0: [Wx] , represent the byte or word at address of the value stored in register Wx with x from 8 to 15.
+mode 1: [Wx + Wy] , represent the byte or word at address resulting in the sum of values stored in register Wx and Wy with x from 8 to 15 and y from 4 to 7
+mode 2: [Wx + simm8] : represent the byte or word at address resulting in the sum of values stored in register Wx and simm8 (signed 8 bit values) with x from 8 to 15
+mode 3: [Wx + Wy + simm8], represent the byte or word at address resulting in the sum of values stored in register Wx and Wy and  simm8 (signed 8 bit values) with x from 8 to 15 and y from 4 to 7
+
+3) Instruction set
+3.1) transfer value from register to register
+     0000000 r yyyy xxxx
+		r : register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
+                yyyy : source register
+                xxxx : destination register
+                template : 
+                       CPY Bx, By ; store register 'By' value to register 'Bx'
+                       CPY Wx, Wy ; store register 'Wy' value to register 'Wx'
+                examples:
+                       CPY B3, B4  ; The value of register 'B4' is stored in register 'B3' and binary coded as '0000000 0 0100 0011'
+                       CPY W5, W10 ; The value of register 'W10' is stored in register 'W3' and binary coded as '0000000 0 1010 0101'
+3.2) transfer value from memory to register 
+
+            r yyy 00 xxxx
+        zzz r yyy 01 xxxx
+                    
+(TODO..)
+
