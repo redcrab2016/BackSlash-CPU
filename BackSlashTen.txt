@@ -91,8 +91,8 @@ mode 3: [Wx + Wy + imm3], represent the byte or word at address resulting in the
 			LOAD W5,[W12] ; the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 0 00 100 1 0101'
 
 
-   0100 d zzz yyy r xxxx
-   0101 d iii yyy r xxxx ( imm = (iii + 1) << r )
+   0010 d zzz yyy r xxxx
+   0011 d iii yyy r xxxx ( imm = (iii + 1) << r )
   1 d iii zzz yyy r xxxx ( imm = (iii + 1) << r )
 
 	
