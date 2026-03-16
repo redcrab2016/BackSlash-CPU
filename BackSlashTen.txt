@@ -72,21 +72,23 @@ mode 3: [Wx + Wy + imm3], represent the byte or word at address resulting in the
                        CPY W5, W10 ; The value of register 'W10' is stored in register 'W3' and binary coded as '0000000 0 1010 0101'
 3.2) transfer value from memory to register , register to memory.
 
-   0001 d 000 yyy r xxxx : no flag modified
+   0001 d p ii yyy r xxxx : no flag modified
 		d: direction, 0 from memory to register, 1 from register to memory
 		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
 		xxxx : register destination if d=0, register source if d=1, register B0 to B15 if r=0, register W0 to W15 if r=1
 		yyy : register containing the address. the register is yyy+8 to designate W8 to W15.
+		p : =0 increment W(yyy+8) after transfer, =1 increment W(yyy+8) before transfer.
+		ii :  increment value of W(yyy+8) : 00 = no change, 01 : 1<<r increment, 11 : 1<<r decrement, 10: no change
 		Assembler template :
-			TRA [Wy], Bx ; store the 8-bits value of register Bx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
-			TRA [Wy], Wx ; store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
-			TRA Bx, [Wy] ; store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15
-			TRA Wx, [Wy] ; store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
+			STORE [Wy], Bx ; store the 8-bits value of register Bx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
+			STORE [Wy], Wx ; store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
+			LOAD Bx, [Wy] ; store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15
+			LOAD Wx, [Wy] ; store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
 		Assembler examples:
-			TRA [W12], B5 ; the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 000 100 0 0101'
-			TRA [W12], W5 ; the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 000 100 1 0101'
-			TRA B5,[W12] ; the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 000 100 0 0101'
-			TRA W5,[W12] ; the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 000 100 1 0101'
+			STORE [W12], B5 ; the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 00 100 0 0101'
+			STORE [W12], W5 ; the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 00 100 1 0101'
+			LOAD B5,[W12] ; the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 0 00 100 0 0101'
+			LOAD W5,[W12] ; the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 0 00 100 1 0101'
 
    0010 d 001 yyy r xxxx ( with R(y+8)+=k after transfer, k = 1<<r )
    0011 d 011 yyy r xxxx ( with R(y+8)-=k after transfer, k = 1<<r )
