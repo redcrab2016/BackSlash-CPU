@@ -69,7 +69,7 @@ mode 3: [Wx + Wy + imm3], represent the byte or word at address resulting in the
                        CPY Wx, Wy ; store register 'Wy' value to register 'Wx'
                 Assembler examples:
                        CPY B3, B4  ; The value of register 'B4' is stored in register 'B3' and binary coded as '0000000 0 0100 0011'
-                       CPY W5, W10 ; The value of register 'W10' is stored in register 'W3' and binary coded as '0000000 0 1010 0101'
+                       CPY W5, W10 ; The value of register 'W10' is stored in register 'W5' and binary coded as '0000000 0 1010 0101'
 3.2) transfer value from memory to register , register to memory.
 
    0001 d p ii yyy r xxxx : Z flag modified if ii is not 00, set by value status of register W(yyy+8) after its change.
