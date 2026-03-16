@@ -4,8 +4,8 @@ BackSlash 10
 LSB means Less Significant Byte of a word.
 MSB means Most Significant Byte of a word.
 Each memory address represent a byte. 
-16 bits data (not instruction) value is stored in memory little-end: LSB is stored in an address before the address of the MSB.
-Each instruction is represented by a word, stored in memory big-endian:  MSB is stored in an address before the address of the LSB.
+16 bits data (not instruction) value is stored in memory little-endian: LSB is stored in an address before the address of the MSB.
+Each instruction is represented by a word, stored in memory big-endian:  MSB value is stored in an address before the address of the LSB value.
 
 1) CPU Registers:
 16 16-bits registers, from W0 to W15.
@@ -55,25 +55,44 @@ At reset time all register as set to value 0 except W7 (then B4 also) has alway 
 Address used by non-Arithmetic_and_logic instructions are represented between brackets [].
 mode 0: [Wx] , represent the byte or word at address of the value stored in register Wx with x from 8 to 15.
 mode 1: [Wx + Wy] , represent the byte or word at address resulting in the sum of values stored in register Wx and Wy with x from 8 to 15 and y from 4 to 7
-mode 2: [Wx + simm8] : represent the byte or word at address resulting in the sum of values stored in register Wx and simm8 (signed 8 bit values) with x from 8 to 15
-mode 3: [Wx + Wy + simm8], represent the byte or word at address resulting in the sum of values stored in register Wx and Wy and  simm8 (signed 8 bit values) with x from 8 to 15 and y from 4 to 7
+mode 2: [Wx + imm3] : represent the byte or word at address resulting in the sum of values stored in register Wx and simm8 (3 bits values) with x from 8 to 15
+mode 3: [Wx + Wy + imm3], represent the byte or word at address resulting in the sum of values stored in register Wx and Wy and  simm8 (3 bit values, the value is ) with x from 8 to 15 and y from 4 to 7
 
 3) Instruction set
 3.1) transfer value from register to register
-     0000000 r yyyy xxxx
+     0000 000 r yyyy xxxx
 		r : register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
                 yyyy : source register
                 xxxx : destination register
-                template : 
+                Assembler template : 
                        CPY Bx, By ; store register 'By' value to register 'Bx'
                        CPY Wx, Wy ; store register 'Wy' value to register 'Wx'
-                examples:
+                Assembler examples:
                        CPY B3, B4  ; The value of register 'B4' is stored in register 'B3' and binary coded as '0000000 0 0100 0011'
                        CPY W5, W10 ; The value of register 'W10' is stored in register 'W3' and binary coded as '0000000 0 1010 0101'
-3.2) transfer value from memory to register 
+3.2) transfer value from memory to register , register to memory.
 
-            r yyy 00 xxxx
-        zzz r yyy 01 xxxx
-                    
-(TODO..)
+   0001 d 000 yyy r xxxx : no flag modified
+		d: direction, 0 from memory to register, 1 from register to memory
+		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
+		xxxx : register destination if d=0, register source if d=1, register B0 to B15 if r=0, register W0 to W15 if r=1
+		yyy : register containing the address. the register is yyy+8 to designate W8 to W15.
+		Assembler template :
+			TRA [Wy], Bx ; store the 8-bits value of register Bx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
+			TRA [Wy], Wx ; store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
+			TRA Bx, [Wy] ; store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15
+			TRA Wx, [Wy] ; store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
+		Assembler examples:
+			TRA [W12], B5 ; the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 000 100 0 0101'
+			TRA [W12], W5 ; the 16-bits value of register 'WB5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 000 100 1 0101'
+			TRA B5,[W12] ; the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 000 100 0 0101'
+			TRA W5,[W12] ; the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 000 100 1 0101'
+
+   0010 d 001 yyy r xxxx ( with R(y+8)+=k after transfer, k = 1<<r )
+   0011 d 011 yyy r xxxx ( with R(y+8)+=k after transfer, k = 1<<r )
+   0100 d zzz yyy r xxxx
+   0101 d iii yyy r xxxx ( imm = (iii + 1) << r )
+  1 d iii zzz yyy r xxxx ( imm = (iii + 1) << r )
+
+	
 
