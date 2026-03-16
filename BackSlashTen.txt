@@ -84,7 +84,7 @@ mode 3: [Wx + Wy + imm3], represent the byte or word at address resulting in the
 			TRA Wx, [Wy] ; store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
 		Assembler examples:
 			TRA [W12], B5 ; the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 000 100 0 0101'
-			TRA [W12], W5 ; the 16-bits value of register 'WB5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 000 100 1 0101'
+			TRA [W12], W5 ; the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 000 100 1 0101'
 			TRA B5,[W12] ; the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 000 100 0 0101'
 			TRA W5,[W12] ; the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 000 100 1 0101'
 
