@@ -1,8 +1,8 @@
 BackSlash 10
 8/16 bits data. 8 bits is a byte, 16 bits is a word.
 16 bits address.
-LSB means Less Significant Byte of a word.
-MSB means Most Significant Byte of a word.
+LSB means Less Significant Byte value of a word.
+MSB means Most Significant Byte value of a word.
 Each memory address represent a byte. 
 16 bits data (not instruction) value is stored in memory little-endian: LSB is stored in an address before the address of the MSB.
 Each instruction is represented by a word, stored in memory big-endian:  MSB value is stored in an address before the address of the LSB value. MSB value address is even, LSB value address is odd.
@@ -41,15 +41,15 @@ PC is alias of W15
 
 The register W7 is always with value 1 (can't be altered), therefore the register aliases ONE8 ONE16 have always the value 1, alias ZERO8 have always have the value 0.
 The register W8 is always with value 0 (can't be altered), therefore the register aliases ZERO16 have always the value 0.
-The register W15 (alias PC) is dedicated to represent the address of the next instruction to execute. only even address. If it does represent an odd address, the less significant bit of register W15 is ignored.
-If the register W15 (alias PC) have value 65535 (0xffff in hexadecimal) the CPU halt.
-The register W14 (alias FG) is dedicated to keep the flags.(TODO: explain each bit in flag)
+The register W15 (alias PC) is dedicated to represent the address of the next instruction to execute. only even address. If it does represent an odd address, the less significant bit of register W15 is ignored (W15 valued as W15 - 1).
+If the register W15 (alias PC) have value 65534 or 65535 (0xfffe or 0xffff in hexadecimal) the CPU halt.
+The register W14 (alias FG) is dedicated to keep the flags.(TODO: explain each bit in flag register)
 The register W13 (alias RA) is set with the value of register W15 (alias PC) before register W15 is modified by a LOAD or CPY operations.
-The register W12 (alias DA) is conventionaly used to represent a destination address
-The register W11 (alias SA) is conventionaly used to represent a source address
-The register W10 (alias SF) is conventionaly used to represent a secondary stack pointer address (often based/relative to main stack pointer) where temporary values (variable) are stored. (stack frame for local variables)
-The register W9 (alias ST) is conventionaly used to represent the main stack pointer address.
-At reset time all register as set to value 0 except W7 (then B4 also) has alway the value 1.
+The register W12 (alias DA) is conventionally used to represent a destination address
+The register W11 (alias SA) is conventionally used to represent a source address
+The register W10 (alias SF) is conventionally used to represent a secondary stack pointer address (often based/relative to main stack pointer) where temporary values (variable) are stored. (stack frame for local variables)
+The register W9 (alias ST) is conventionally used to represent the main stack pointer address.
+At reset time all register are set to value 0 except W7 (then B4 also) is always with the value 1.
 
 2) Addressing mode:
 Address used by non-Arithmetic_and_logic instructions are represented between brackets [].
@@ -132,11 +132,15 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 		yyy : register containing the address. the register is yyy+8 to designate W8 to W15.
 		zzz : register containing the offset address. the register is zzz to designate W0 to W7
 		Assembler template :
-			STORE [Wy + Wz], Bx ; The 8-bits value of register Bx is store in memory at address resulting of the sum of Wy and  Wz. x from 0 to 15, y from W8 to W15, z from 0 to 7
-			STORE [Wy + Wz], Wx ; The 16-bits value of register Bx is store in memory at address resulting of the sum of Wy and  Wz. x from 0 to 15, y from W8 to W15, z from 0 to 7
+			STORE [Wy + Wz], Bx ; The 8-bits value of register Bx is stored in memory at address resulting of the sum of Wy and  Wz. x from 0 to 15, y from 8 to 15, z from 0 to 7
+			STORE [Wy + Wz], Wx ; The 16-bits value of register Bx is stored in memory at address resulting of the sum of Wy and  Wz. x from 0 to 15, y from 8 to 15, z from 0 to 7
 			LOAD Bx, [Wy + Wz] ; store the 8-bits value stored in memory at address defined by the sum of value of register Wy and Wz to register Bx. x from 0 to 15,  y from 8 to 15, z from 0 to 7
-			LOAD Wx [Wy + Wz], Wx ; store the 16-bits value stored in memory at address defined by the sum of value of register Wy and Wz to register Wx. x from 0 to 15,  y from 8 to 15, z from 0 to 7
+			LOAD Wx, [Wy + Wz] ; store the 16-bits value stored in memory at address defined by the sum of value of register Wy and Wz to register Wx. x from 0 to 15,  y from 8 to 15, z from 0 to 7
 		Assembler examples :
+			STORE [W12 + W6], B5 ; The 8-bits value of register B5 is stored in memory at address resulting of the sum of W12 and  W6. Binary coded as '0010 1 110 100 0 0101'
+			STORE [W12 + W6], W5 ; The 16-bits value of register W5 is stored in memory at address resulting of the sum of W12 and  W6. Binary codded as '0010 1 110 100 1 0101'
+			LOAD B5, [W12 + W6] ; store the 8-bits value stored in memory at address defined by the sum of value of register W12 and W6 to register B5. Binary coded '0010 0 110 100 0 0101'
+			LOAD W5, [W12 + W6] ; store the 16-bits value stored in memory at address defined by the sum of value of register W12 and W6 to register W5. Binary coded '0010 0 110 100 1 0101'
 
 
 
