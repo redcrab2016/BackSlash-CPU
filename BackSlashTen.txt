@@ -84,14 +84,14 @@ mode 3: [Wx + Wy + imm3], represent the byte or word at address resulting in the
 			STORE [Wy], Wx ; store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
 			LOAD Bx, [Wy] ; store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15
 			LOAD Wx, [Wy] ; store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
-			STORE [+Wy], Bx ; Wy = Wy + 1, store the 8-bits value of register Bx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
-			STORE [+Wy], Wx ; Wy = Wy + 2, store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
-			LOAD Bx, [+Wy] ; Wy = Wy + 1, store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15
-			LOAD Wx, [+Wy] ; Wy = Wy + 2, store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
-			STORE [-Wy], Bx ; Wy = Wy - 1, store the 8-bits value of register Bx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
-			STORE [-Wy], Wx ; Wy = Wy - 2, store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
-			LOAD Bx, [-Wy] ; Wy = Wy - 1, store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15
-			LOAD Wx, [-Wy] ; Wy = Wy - 2, store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
+			STORE [+Wy], Bx ; Wy = Wy + 1 then store the 8-bits value of register Bx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
+			STORE [+Wy], Wx ; Wy = Wy + 2 then store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
+			LOAD Bx, [+Wy] ; Wy = Wy + 1 then store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15
+			LOAD Wx, [+Wy] ; Wy = Wy + 2 then store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
+			STORE [-Wy], Bx ; Wy = Wy - 1 then store the 8-bits value of register Bx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
+			STORE [-Wy], Wx ; Wy = Wy - 2 then store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15
+			LOAD Bx, [-Wy] ; Wy = Wy - 1 then store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15
+			LOAD Wx, [-Wy] ; Wy = Wy - 2 then store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15
 			STORE [Wy+], Bx ; store the 8-bits value of register Bx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15, then Wy = Wy + 1
 			STORE [Wy+], Wx ; store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15, then Wy = Wy + 2
 			LOAD Bx, [Wy+] ; store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15, then Wy = Wy + 1
