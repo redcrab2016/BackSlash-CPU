@@ -73,7 +73,7 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 			CPY Wx, Wy ; store register 'Wy' value to register 'Wx'
 		Assembler examples:
 			CPY B3, B4  ; The value of register 'B4' is stored in register 'B3'  . Binary coded as '0000 000 0 0100 0011'
-			CPY W5, W10 ; The value of register 'W10' is stored in register 'W5'  . Binary coded as '0000 000 0 1010 0101'
+			CPY W5, W10 ; The value of register 'W10' is stored in register 'W5'  . Binary coded as '0000 000 1 1010 0101'
 3.2) transfer value from memory to register (LOAD) , register to memory (STORE).
 	Z flag is modified for LOAD operation.
 	0001 d p ii yyy r xxxx : addressing mode 0
