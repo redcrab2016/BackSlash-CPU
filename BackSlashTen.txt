@@ -168,6 +168,11 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 			STORE [Wy + Wz + imm], Wx ;  The 16-bits value of register Wx is stored in memory at address resulting of the sum of Wy and Wz and imm (value 2 or 4 or 6 or 8 or 10 or 12 or 14 or 16). x from 0 to 15, y from 8 to 15. z from 0 to 7
 			LOAD Bx, [Wy + Wz + imm] ; Store the 8-bits value in memory at address defined by the sum of Wy and Wz and imm (from 1 to 8) to register Bx. x from 0 to 15, y from 8 to 15, z from 0 to 7.
 			LOAD Wx, [Wy + Wz + imm] ; Store the 16-bits value in memory at address defined by the sum of Wy and Wz and imm (value 2 or 4 or 6 or 8 or 10 or 12 or 14 or 16) to register Wx. x from 0 to 15, y from 8 to 15, z from 0 to 7.
+		Assembler examples :
+			STORE [W12 + W6 + 3], B10 ;  The 8-bits value of register B10 is stored in memory at address resulting of the sum of W12 and W6 and 3. Binary coded as  '1 1 010 110 100 0 1010'
+			STORE [W12 + W6 + 4], W10 ;  The 16-bits value of register W10 is stored in memory at address resulting of the sum of W12 and W6 and 4. Binary coded as '1 1 001 110 100 1 1010'
+			LOAD B10, [W12 + W6 + 3] ; Store the 8-bits value in memory at address defined by the sum of W12 and W6 and 3 to register B10. Binary coded as '1 0 010 110 100 0 1010'
+			LOAD W10, [W12 + W6 + 4] ; Store the 16-bits value in memory at address defined by the sum of W12 and W6 and 4 to register W10. Binary coded as '1 0 001 110 100 1 1010'
 
 
 
