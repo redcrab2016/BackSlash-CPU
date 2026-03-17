@@ -55,15 +55,16 @@ At reset time all register as set to value 0 except W7 (then B4 also) has alway 
 Address used by non-Arithmetic_and_logic instructions are represented between brackets [].
 mode 0: [Wx] or [-Wx] or [+Wx] or [Wx-] or [Wx+] , represent the byte or word at address of the value stored in register Wx with x from 8 to 15.
 mode 1: [Wx + Wy] , represent the byte or word at address resulting in the sum of values stored in register Wx and Wy with x from 8 to 15 and y from 0 to 7
-mode 2: [Wx + imm] : represent the byte or word at address resulting in the sum of values stored in register Wx and imm with x from 8 to 15
+mode 2: [Wx + imm] : represent the byte or word at address resulting in the sum of values stored in register Wx and imm with x from 8 to 15. if imm = 0 then use mode 0
 mode 3: [Wx + Wy + imm], represent the byte or word at address resulting in the sum of values stored in register Wx and Wy and imm with x from 8 to 15 and y from 0 to 7
+if imm = 0 then use mode 1
 If the operation designate a 8-bits register then imm is 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8.
 If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10 or 12 or 14 or 16.
 
 
 3) Instruction set
 3.1) transfer value from register to register. No flag modified
-     0000 000 r yyyy xxxx
+	0000 000 r yyyy xxxx
 		r : register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
 		yyyy : source register
 		xxxx : destination register
@@ -71,11 +72,10 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 			CPY Bx, By ; store register 'By' value to register 'Bx'
 			CPY Wx, Wy ; store register 'Wy' value to register 'Wx'
 		Assembler examples:
-			CPY B3, B4  ; The value of register 'B4' is stored in register 'B3' and binary coded as '0000000 0 0100 0011'
-			CPY W5, W10 ; The value of register 'W10' is stored in register 'W5' and binary coded as '0000000 0 1010 0101'
+			CPY B3, B4  ; The value of register 'B4' is stored in register 'B3' and binary coded as '0000 000 0 0100 0011'
+			CPY W5, W10 ; The value of register 'W10' is stored in register 'W5' and binary coded as '0000 000 0 1010 0101'
 3.2) transfer value from memory to register (LOAD) , register to memory (STORE).
-
-   0001 d p ii yyy r xxxx : Z flag modified if ii is not 00, set by value status of register W(yyy+8) after its change.
+	0001 d p ii yyy r xxxx : addressing mode 0
 		d: direction, 0 from memory to register (LOAD), 1 from register to memory (STORE)
 		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
 		xxxx : register, if d=0  register is destination.If d=1 register is source, register B0 to B15 if r=0, register W0 to W15 if r=1
@@ -103,7 +103,6 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 			STORE [Wy-], Wx ; store the 16-bits value of register Wx to memory address defined by value of register Wy. x from 0 to 15 and y from 8 to 15, then Wy = Wy - 2
 			LOAD Bx, [Wy-] ; store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15, then Wy = Wy - 1
 			LOAD Wx, [Wy-] ; store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15, then Wy = Wy - 2
-
 		Assembler examples:
 			STORE [W12], B5 ; the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 00 100 0 0101'
 			STORE [W12], W5 ; the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 00 100 1 0101'
@@ -125,23 +124,29 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 			STORE [W12-], W5 ; do W12 = W12 - 2 after the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 11 100 1 0101'
 			LOAD B5, [W12-] ; do W12 = W12 - 1 after the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 0 11 100 0 0101'
 			LOAD W5, [W12-] ; do W12 = W12 - 2 after the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 0 11 100 1 0101'
-
-   0010 d zzz yyy r xxxx
+	0010 d zzz yyy r xxxx : addressing mode 1
 		d: direction, 0 from memory to register (LOAD), 1 from register to memory (STORE)
 		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
 		xxxx : register, if d=0  register is destination.If d=1 register is source, register B0 to B15 if r=0, register W0 to W15 if r=1
 		yyy : register containing the address. the register is yyy+8 to designate W8 to W15.
-		p : =0 increment W(yyy+8) after transfer, =1 increment W(yyy+8) before transfer.
-		ii :  increment value of W(yyy+8) : 00 = no change, 01 : 1<<r increment, 11 : 1<<r decrement, 10: no change
+		zzz : register containing the offset address. the register is zzz to designate W0 to W7
+		Assembler template :
+			STORE [Wy + Wz], Bx ; The 8-bits value of register Bx is store in memory at address resulting of the sum of Wy and  Wz. x from 0 to 15, y from W8 to W15, z from 0 to 7
+			STORE [Wy + Wz], Wx ; The 16-bits value of register Bx is store in memory at address resulting of the sum of Wy and  Wz. x from 0 to 15, y from W8 to W15, z from 0 to 7
+			LOAD Bx, [Wy + Wz] ; store the 8-bits value stored in memory at address defined by the sum of value of register Wy and Wz to register Bx. x from 0 to 15,  y from 8 to 15, z from 0 to 7
+			LOAD Wx [Wy + Wz], Wx ; store the 16-bits value stored in memory at address defined by the sum of value of register Wy and Wz to register Wx. x from 0 to 15,  y from 8 to 15, z from 0 to 7
 
-   0011 d iii yyy r xxxx ( imm = (iii + 1) << r )
-  1 d iii zzz yyy r xxxx ( imm = (iii + 1) << r )
 
-   0100 iiii iiii xxxx	SET Bx, iiiiiiii
+
+
+	0011 d iii yyy r xxxx: addressing mode 2 ( imm = (iii + 1) << r )
+	1 d iii zzz yyy r xxxx: addressing mode 3 ( imm = (iii + 1) << r )
+
+	0100 iiii iiii xxxx	SET Bx, iiiiiiii
    
-   0101      yyyy xxxx  ADD B0, Bx, By ; B0 = Bx + By
-   0101      yyyy xxxx  ADC B0, Bx, By ; B0 = Bx + By + C flag
-   0101      yyyy xxxx  SUB B0, Bx, By ; B0 = Bx - By
-   0101      yyyy xxxx  SBB B0, Bx, By ; B0 = Bx - By - C flag
+	0101      yyyy xxxx  ADD B0, Bx, By ; B0 = Bx + By
+	0101      yyyy xxxx  ADC B0, Bx, By ; B0 = Bx + By + C flag
+	0101      yyyy xxxx  SUB B0, Bx, By ; B0 = Bx - By
+	0101      yyyy xxxx  SBB B0, Bx, By ; B0 = Bx - By - C flag
    
 
