@@ -65,14 +65,14 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 3.1) transfer value from register to register. No flag modified
      0000 000 r yyyy xxxx
 		r : register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
-                yyyy : source register
-                xxxx : destination register
-                Assembler template : 
-                       CPY Bx, By ; store register 'By' value to register 'Bx'
-                       CPY Wx, Wy ; store register 'Wy' value to register 'Wx'
-                Assembler examples:
-                       CPY B3, B4  ; The value of register 'B4' is stored in register 'B3' and binary coded as '0000000 0 0100 0011'
-                       CPY W5, W10 ; The value of register 'W10' is stored in register 'W5' and binary coded as '0000000 0 1010 0101'
+		yyyy : source register
+		xxxx : destination register
+		Assembler template : 
+			CPY Bx, By ; store register 'By' value to register 'Bx'
+			CPY Wx, Wy ; store register 'Wy' value to register 'Wx'
+		Assembler examples:
+			CPY B3, B4  ; The value of register 'B4' is stored in register 'B3' and binary coded as '0000000 0 0100 0011'
+			CPY W5, W10 ; The value of register 'W10' is stored in register 'W5' and binary coded as '0000000 0 1010 0101'
 3.2) transfer value from memory to register (LOAD) , register to memory (STORE).
 
    0001 d p ii yyy r xxxx : Z flag modified if ii is not 00, set by value status of register W(yyy+8) after its change.
