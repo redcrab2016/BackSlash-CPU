@@ -156,9 +156,20 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 			STORE [W12 + 4], W10 ; The 16-bits value of register W10 is stored in memory at address resulting of the sum of W12 and 4. Binary coded as '0011 1 001 100 1 1010'
 			LOAD B10, [W12 + 3] ; Store the 8-bits value in memory at address defined by the sum of W12 and 3 to register B10. Binary coded as '0011 0 010 100 0 1010'
 			LOAD W10, [W12 + 4] ; Store the 16-bits value in memory at address defined by the sum of W12 and 4 to register W10. Binary coded as '0011 0 001 100 1 1010'
+	1 d iii zzz yyy r xxxx: LOAD and STORE with addressing mode 3
+		d: direction, 0 from memory to register (LOAD), 1 from register to memory (STORE)
+		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
+		xxxx : register, if d=0  register is destination.If d=1 register is source, register B0 to B15 if r=0, register W0 to W15 if r=1
+		yyy : register containing the address. the register is yyy+8 to designate W8 to W15.
+		zzz : register containing the offset address. the register is zzz to designate W0 to W7
+		iii : value between 0 to 7, used as immediate with value computed as (iii + 1) << t. if r = 0 then immediate  is between 1 and 8. if r = 1 then immediate is 2 or 4 or 5 or 6 or 8 or 10 or 12 or 14 or 16. The immediate value is designated as 'imm'
+		Assembler template :
+			STORE [Wy + Wz + imm], Bx ;  The 8-bits value of register Bx is stored in memory at address resulting of the sum of Wy and Wz and imm (from 1 to 8). x from 0 to 15, y from 8 to 15. z from 0 to 7
+			STORE [Wy + Wz + imm], Wx ;  The 16-bits value of register Wx is stored in memory at address resulting of the sum of Wy and Wz and imm (value 2 or 4 or 6 or 8 or 10 or 12 or 14 or 16). x from 0 to 15, y from 8 to 15. z from 0 to 7
+			LOAD Bx, [Wy + Wz + imm] ; Store the 8-bits value in memory at address defined by the sum of Wy and Wz and imm (from 1 to 8) to register Bx. x from 0 to 15, y from 8 to 15, z from 0 to 7.
+			LOAD Wx, [Wy + Wz + imm] ; Store the 16-bits value in memory at address defined by the sum of Wy and Wz and imm (value 2 or 4 or 6 or 8 or 10 or 12 or 14 or 16) to register Wx. x from 0 to 15, y from 8 to 15, z from 0 to 7.
 
 
-	1 d iii zzz yyy r xxxx: LOAD and STORE with addressing mode 3 ( imm = (iii + 1) << r )
 
 	0100 iiii iiii xxxx	SET Bx, iiiiiiii
    
