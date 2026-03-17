@@ -194,11 +194,9 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 			LSB W10, 42 ; set the LSB value of register W10 to 42.
 			MSB W10, -1 ; set the MSB value of register W10 to  255 (-1 in signed 8-bits value)
 
-3.3) Bit operation
+3.4) Bit and arithmetic operations
 (TODO)
-3.4) arithmetic operation
-(TODO)
-3.3) conditional and unconditional relative branching
+3.5) conditional and unconditional relative branching
 	0111 siii iiii cccc
 		siii iiii: signed 8-bits branching offset from -128 to +127. but the value is multiplied by 2 then from -256 to +254 (only even number)
    		ccc: conditions
@@ -210,6 +208,11 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 		Assembler examples:
 			JMP.al -204 ; unconditional jump , W15 = W15 - 204. Binary coded as '0111 1001 1010 0000'
 			JMP.nop 0 ; no-operation example. Binary coded as '0111 0000 0000 1111'
+
+4) Assembler operation consideration
+4.1) Stack
+4.2) Absolute address branching
+4.2) STORE and LOAD with addressing mode 2 with 16 bits data on odd address.
 
 // below draft
 	0101      yyyy xxxx  ADD B0, Bx, By ; B0 = Bx + By
