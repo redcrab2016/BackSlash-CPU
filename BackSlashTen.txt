@@ -175,7 +175,7 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 			LOAD W10, [W12 + W6 + 4] ; Store the 16-bits value in memory at address defined by the sum of W12 and W6 and 4 to register W10. Binary coded as '1 0 001 110 100 1 1010'
 
 3.3) Immediate assignment
-	0100 iiii iiii xxxx: 8-bits immediate value to register
+	0100 iiii iiii xxxx: 8-bits immediate value to a register from B0 to B15
 		iiii iiii: 8 bits immediate value (designated as 'imm')
 		xxxx: Register Bx, x from 0 to 15
 		Assembler template :
@@ -183,6 +183,16 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 		Assembler examples :
 			SET B10, 42 ; set the value 42 to register B10
 			SET B9, -1 ; set the value 255 (-1 in signed 8-bits value) to register B9
+	0101 iiii iiii xxx h: 8-bits immediate value to LSB/MSB part of register W8 to W15
+		iiii iiii: 8 bits immediate value (designated as 'imm')
+		xxx: Register W(x+8), x from 0 to 7. Designate the a register from W8 to W15
+		h: 0 LSB of W(x+8), 1 MSB of W(x+8)
+		Assembler template :
+			LSB Wx, imm ; set imm immediate as LSB value of register Wx, x from 8 to 15
+			MSB Wx, imm ; set imm immediate as MSB value of register Wx, x from 8 to 15
+		Assembler examples :
+			LSB W10, 42 ; set the LSB value of register W10 to 42.
+			MSB W10, -1 ; set the MSB value of register W10 to  255 (-1 in signed 8-bits value)
 
 3.3) Bit operation
 (TODO)
