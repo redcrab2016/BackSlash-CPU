@@ -44,7 +44,7 @@ The register W8 is always with value 0 (can't be altered), therefore the registe
 The register W15 (alias PC) is dedicated to represent the address of the next instruction to execute. only even address. If it does represent an odd address, the less significant bit of register W15 is ignored.
 If the register W15 (alias PC) have value 65535 (0xffff in hexadecimal) the CPU halt.
 The register W14 (alias FG) is dedicated to keep the flags.(TODO: explain each bit in flag)
-The register W13 (alias RA) is set with the value of register W15 (alias PC) before register W15 is modified with a new value from another register (Absolute address branching)
+The register W13 (alias RA) is set with the value of register W15 (alias PC) before register W15 is modified by a LOAD or CPY operations.
 The register W12 (alias DA) is conventionaly used to represent a destination address
 The register W11 (alias SA) is conventionaly used to represent a source address
 The register W10 (alias SF) is conventionaly used to represent a secondary stack pointer address (often based/relative to main stack pointer) where temporary values (variable) are stored. (stack frame for local variables)
@@ -72,9 +72,10 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 			CPY Bx, By ; store register 'By' value to register 'Bx'
 			CPY Wx, Wy ; store register 'Wy' value to register 'Wx'
 		Assembler examples:
-			CPY B3, B4  ; The value of register 'B4' is stored in register 'B3' and binary coded as '0000 000 0 0100 0011'
-			CPY W5, W10 ; The value of register 'W10' is stored in register 'W5' and binary coded as '0000 000 0 1010 0101'
+			CPY B3, B4  ; The value of register 'B4' is stored in register 'B3'  . Binary coded as '0000 000 0 0100 0011'
+			CPY W5, W10 ; The value of register 'W10' is stored in register 'W5'  . Binary coded as '0000 000 0 1010 0101'
 3.2) transfer value from memory to register (LOAD) , register to memory (STORE).
+	Z flag is modified for LOAD operation.
 	0001 d p ii yyy r xxxx : addressing mode 0
 		d: direction, 0 from memory to register (LOAD), 1 from register to memory (STORE)
 		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
@@ -104,24 +105,24 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 			LOAD Bx, [Wy-] ; store the 8-bits value stored in memory at address defined by value of register Wy to register Bx. x from 0 to 15 and y from 8 to 15, then Wy = Wy - 1
 			LOAD Wx, [Wy-] ; store the 16-bits value stored in memory at address defined by value of register Wy to register Wx. x from 0 to 15 and y from 8 to 15, then Wy = Wy - 2
 		Assembler examples:
-			STORE [W12], B5 ; the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 00 100 0 0101'
-			STORE [W12], W5 ; the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 00 100 1 0101'
+			STORE [W12], B5 ; the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 0 00 100 0 0101'
+			STORE [W12], W5 ; the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 0 00 100 1 0101'
 			LOAD B5, [W12] ; the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 0 00 100 0 0101'
 			LOAD W5, [W12] ; the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 0 00 100 1 0101'
-			STORE [+W12], B5 ; W12 = W12 + 1 then the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 1 01 100 0 0101'
-			STORE [+W12], W5 ; W12 = W12 + 2 then the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 1 01 100 1 0101'
+			STORE [+W12], B5 ; W12 = W12 + 1 then the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 1 01 100 0 0101'
+			STORE [+W12], W5 ; W12 = W12 + 2 then the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 1 01 100 1 0101'
 			LOAD B5, [+W12] ; W12 = W12 + 1 then the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 1 01 100 0 0101'
 			LOAD W5, [+W12] ; W12 = W12 + 2 then the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 1 01 100 1 0101'
-			STORE [-W12], B5 ; W12 = W12 - 1 then the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 1 11 100 0 0101'
-			STORE [-W12], W5 ; W12 = W12 - 2 then the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 1 11 100 1 0101'
+			STORE [-W12], B5 ; W12 = W12 - 1 then the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 1 11 100 0 0101'
+			STORE [-W12], W5 ; W12 = W12 - 2 then the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 1 11 100 1 0101'
 			LOAD B5, [-W12] ; W12 = W12 - 1 then the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 1 11 100 0 0101'
 			LOAD W5, [-W12] ; W12 = W12 - 2 then the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 1 11 100 1 0101'
-			STORE [W12+], B5 ; do W12 = W12 + 1 after the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 01 100 0 0101'
-			STORE [W12+], W5 ; do W12 = W12 + 2 after the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 01 100 1 0101'
+			STORE [W12+], B5 ; do W12 = W12 + 1 after the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 0 01 100 0 0101'
+			STORE [W12+], W5 ; do W12 = W12 + 2 after the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 0 01 100 1 0101'
 			LOAD B5, [W12+] ; do W12 = W12 + 1 after the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 0 01 100 0 0101'
 			LOAD W5, [W12+] ; do W12 = W12 + 2 after the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 0 01 100 1 0101'
-			STORE [W12-], B5 ; do W12 = W12 - 1 after the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 11 100 0 0101'
-			STORE [W12-], W5 ; do W12 = W12 - 2 after the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12 and binary coded as '0001 1 0 11 100 1 0101'
+			STORE [W12-], B5 ; do W12 = W12 - 1 after the 8-bits value of register 'B5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 0 11 100 0 0101'
+			STORE [W12-], W5 ; do W12 = W12 - 2 after the 16-bits value of register 'W5' is stored in memory at address defined by value of register W12. Binary coded as '0001 1 0 11 100 1 0101'
 			LOAD B5, [W12-] ; do W12 = W12 - 1 after the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 0 11 100 0 0101'
 			LOAD W5, [W12-] ; do W12 = W12 - 2 after the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 0 11 100 1 0101'
 	0010 d zzz yyy r xxxx : addressing mode 1
@@ -135,7 +136,7 @@ If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10
 			STORE [Wy + Wz], Wx ; The 16-bits value of register Bx is store in memory at address resulting of the sum of Wy and  Wz. x from 0 to 15, y from W8 to W15, z from 0 to 7
 			LOAD Bx, [Wy + Wz] ; store the 8-bits value stored in memory at address defined by the sum of value of register Wy and Wz to register Bx. x from 0 to 15,  y from 8 to 15, z from 0 to 7
 			LOAD Wx [Wy + Wz], Wx ; store the 16-bits value stored in memory at address defined by the sum of value of register Wy and Wz to register Wx. x from 0 to 15,  y from 8 to 15, z from 0 to 7
-
+		Assembler examples :
 
 
 
