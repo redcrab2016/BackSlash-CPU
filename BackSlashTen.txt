@@ -74,7 +74,7 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 			CPY B3, B4  ; The value of register 'B4' is stored in register 'B3'  . Binary coded as '0000 000 0 0100 0011'
 			CPY W5, W10 ; The value of register 'W10' is stored in register 'W5'  . Binary coded as '0000 000 1 1010 0101'
 3.2) transfer value from memory to register (LOAD) , register to memory (STORE).
-	Z flag is modified for LOAD operation.
+	Z,S flags are modified for LOAD operation.
 	0001 d p ii yyy r xxxx : LOAD and STORE with addressing mode 0
 		d: direction, 0 from memory to register (LOAD), 1 from register to memory (STORE)
 		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
@@ -174,10 +174,34 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 			LOAD B10, [W12 + W6 + 3] ; Store the 8-bits value in memory at address defined by the sum of W12 and W6 and 3 to register B10. Binary coded as '1 0 010 110 100 0 1010'
 			LOAD W10, [W12 + W6 + 4] ; Store the 16-bits value in memory at address defined by the sum of W12 and W6 and 4 to register W10. Binary coded as '1 0 001 110 100 1 1010'
 
+3.3) Immediate assignment
+	0100 iiii iiii xxxx: 8-bits immediate value to register
+		iiii iiii: 8 bits immediate value (designated as 'imm')
+		xxxx: Register Bx, x from 0 to 15
+		Assembler template :
+			SET Bx, imm ; set imm immediate value to register Bx
+		Assembler examples :
+			SET B10, 42 ; set the value 42 to register B10
+			SET B9, -1 ; set the value 255 (-1 in signed 8-bits value) to register B9
 
+3.3) Bit operation
+(TODO)
+3.4) arithmetic operation
+(TODO)
+3.3) conditional and unconditional relative branching
+	0111 siii iiii cccc
+		siii iiii: signed 8-bits branching offset from -128 to +127. but the value is multiplied by 2 then from -256 to +254 (only even number)
+   		ccc: conditions
+			0000 : always ('cond' value 'al')
+			.... : ... (TODO: conditions based on flag register bits)
+			1111 : never ('cond' value 'nop') (like a no operation)
+		Assembler template:
+			JMP.cond  offset ; if cond is true then W15 = W15 + offset. offset is even and from -256 to +254
+		Assembler examples:
+			JMP.al -204 ; unconditional jump , W15 = W15 - 204. Binary coded as '0111 1001 1010 0000'
+			JMP.nop 0 ; no-operation example. Binary coded as '0111 0000 0000 1111'
 
-	0100 iiii iiii xxxx	SET Bx, iiiiiiii
-   
+// below draft
 	0101      yyyy xxxx  ADD B0, Bx, By ; B0 = Bx + By
 	0101      yyyy xxxx  ADC B0, Bx, By ; B0 = Bx + By + C flag
 	0101      yyyy xxxx  SUB B0, Bx, By ; B0 = Bx - By
