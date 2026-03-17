@@ -53,10 +53,13 @@ At reset time all register as set to value 0 except W7 (then B4 also) has alway 
 
 2) Addressing mode:
 Address used by non-Arithmetic_and_logic instructions are represented between brackets [].
-mode 0: [Wx] , represent the byte or word at address of the value stored in register Wx with x from 8 to 15.
-mode 1: [Wx + Wy] , represent the byte or word at address resulting in the sum of values stored in register Wx and Wy with x from 8 to 15 and y from 4 to 7
-mode 2: [Wx + imm3] : represent the byte or word at address resulting in the sum of values stored in register Wx and simm8 (3 bits values) with x from 8 to 15
-mode 3: [Wx + Wy + imm3], represent the byte or word at address resulting in the sum of values stored in register Wx and Wy and  simm8 (3 bit values, the value is ) with x from 8 to 15 and y from 4 to 7
+mode 0: [Wx] or [-Wx] or [+Wx] or [Wx-] or [Wx+] , represent the byte or word at address of the value stored in register Wx with x from 8 to 15.
+mode 1: [Wx + Wy] , represent the byte or word at address resulting in the sum of values stored in register Wx and Wy with x from 8 to 15 and y from 0 to 7
+mode 2: [Wx + imm] : represent the byte or word at address resulting in the sum of values stored in register Wx and imm with x from 8 to 15
+mode 3: [Wx + Wy + imm], represent the byte or word at address resulting in the sum of values stored in register Wx and Wy and imm with x from 8 to 15 and y from 0 to 7
+If the operation designate a 8-bits register then imm is 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8.
+If the operation designate a 16-bits register then imm is 2 or 4 or 6 or 8 or 10 or 12 or 14 or 16.
+
 
 3) Instruction set
 3.1) transfer value from register to register. No flag modified
@@ -123,8 +126,14 @@ mode 3: [Wx + Wy + imm3], represent the byte or word at address resulting in the
 			LOAD B5, [W12-] ; do W12 = W12 - 1 after the 8-bits value at address defined by value of register W12 is stored in register B5. Binary coded as '0001 0 0 11 100 0 0101'
 			LOAD W5, [W12-] ; do W12 = W12 - 2 after the 16-bits value at address defined by value of register W12 is stored in register W5. Binary coded as '0001 0 0 11 100 1 0101'
 
-
    0010 d zzz yyy r xxxx
+		d: direction, 0 from memory to register (LOAD), 1 from register to memory (STORE)
+		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
+		xxxx : register, if d=0  register is destination.If d=1 register is source, register B0 to B15 if r=0, register W0 to W15 if r=1
+		yyy : register containing the address. the register is yyy+8 to designate W8 to W15.
+		p : =0 increment W(yyy+8) after transfer, =1 increment W(yyy+8) before transfer.
+		ii :  increment value of W(yyy+8) : 00 = no change, 01 : 1<<r increment, 11 : 1<<r decrement, 10: no change
+
    0011 d iii yyy r xxxx ( imm = (iii + 1) << r )
   1 d iii zzz yyy r xxxx ( imm = (iii + 1) << r )
 
