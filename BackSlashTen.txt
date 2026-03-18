@@ -195,7 +195,13 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 			MSB W10, -1 ; set the MSB value of register W10 to  255 (-1 in signed 8-bits value). Binary coded as '0101 1111 1111 010 1'
 
 3.4) Bit and arithmetic operations
-(TODO)
+(TODO) 
+	0110 000 000 o r xxxx: NOT and NEG operation
+	0110 00 aaaa ? ? ????: reserved (aaaa different to 0000 )
+	0110 01 ooo ii r xxxx ; operation (SHL, SHR, SAL, SAR, ROL, ROR)  on register xxxx with immediate equal to 2^ii (1, 2, 4, 8)
+	0110 1 oo r yyyy xxxx ;  operation (ADD, ADC, SUB, SBB)  registerX = registerX op registerY
+	0000 ooo r yyyy xxxx : ooo as 001 = OR, 010 = AND, 011 = XOR, 100 = TST, 101 = CMP
+	0000 ooo iiii r xxxx : ooo as 110 = BTC, 111 = BTS  clear/set bit number iiii of registerX
 3.5) conditional and unconditional relative branching
 	0111 siii iiii cccc
 		siii iiii: signed 8-bits branching offset from -128 to +127. but the value is multiplied by 2 then from -256 to +254 (only even number)
@@ -212,12 +218,8 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 4) Assembler operation consideration
 4.1) Stack
 4.2) Absolute address branching
-4.2) STORE and LOAD with addressing mode 2 with 16 bits data on odd address.
+4.3) Sub routine
+4.4) STORE and LOAD with addressing mode 2 with 16 bits data on odd address.
 
-// below draft
-	0101      yyyy xxxx  ADD B0, Bx, By ; B0 = Bx + By
-	0101      yyyy xxxx  ADC B0, Bx, By ; B0 = Bx + By + C flag
-	0101      yyyy xxxx  SUB B0, Bx, By ; B0 = Bx - By
-	0101      yyyy xxxx  SBB B0, Bx, By ; B0 = Bx - By - C flag
    
 
