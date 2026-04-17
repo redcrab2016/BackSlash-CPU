@@ -197,8 +197,25 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 3.4) Bit and arithmetic operations
 (TODO) 
 	0110 000 000 o r xxxx: NOT and NEG operation
-	0110 00 aaaa ? ? ????: reserved (aaaa different to 0000 )
-	0110 01 ooo ii r xxxx ; operation (SHL, SHR, SAL, SAR, ROL, ROR)  on register xxxx with immediate equal to 2^ii (1, 2, 4, 8)
+		o: 0 for NOT (invert each bit of the binary value), 1 for NEG ( NEGate the register value: NOT the value then add 1: The Two's Complement Method
+		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
+)
+		xxxx: register number,register B0 to B15 if r=0, register W0 to W15 if r=1.
+		Assembler template :
+			NOT Bx ; binary invert each bit value of register Bx, the result is stored in register Bx.
+			NOT Wx ; binary invert each bit value of register Wx, the result is stored in register Wx.
+			NEG Bx ; negate the value of register BX, the result is stored in register Bx.
+			NEG Wx ; negate the value of register Wx, the result is stored in register Wx.
+		Assembler examples :
+			NOT B5 ; binary invert each bit of register B5 value and store it in register B5. Binary coded as '0110 000 000 0 0 0101'
+			NOT W7 ; binary invert each bit of register W7 value and store it in register W7. Binary coded as '0110 000 000 0 1 1110'
+			NEG B5 ; negate the register B5 value and store it in register B5. Binary coded as '0110 000 000 1 0 0101'
+			NEG W7 ; negate the register W7 value and store it in register W7. Binary coded as '0110 000 000 1 1 1110'
+
+	0110 00 aaaa ? ? ????: reserved (with aaaa different to 0000 )
+		TODO
+	0110 01 ooo ii r xxxx ; operation (SHL, SHR, SAL, SAR, ROL, ROR)  on register xxxx with immediate equal to 2^ii (value can be 1, 2, 4, 8)
+		ooo: 000 for SHL (shift logical left), 001
 	0110 1 oo r yyyy xxxx ;  operation (ADD, ADC, SUB, SBB)  registerX = registerX op registerY
 	0000 ooo r yyyy xxxx : ooo as 001 = OR, 010 = AND, 011 = XOR, 100 = TST, 101 = CMP
 	0000 ooo iiii r xxxx : ooo as 110 = BTC, 111 = BTS  clear/set bit number iiii of registerX
