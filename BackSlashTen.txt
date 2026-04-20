@@ -219,20 +219,20 @@ If the operation involve a 16-bits value transfer then imm is 2 or 4 or 6 or 8 o
 		r: register size, value 0 for 8-bits register from B0 to B15, value 1 for 16-bits register from W0 to W15
 		xxxx: register number,register B0 to B15 if r=0, register W0 to W15 if r=1.
 		Assembler template : 
-			SHL Bx, y ;
-			SHL Wx, y ;
-			SHR Bx, y ;
-			SHR Wx, y ;
-			SAR Bx, y ;
-			SAR Wx, y ;
-			ROL Bx, y ;
-			ROL Wx, y ;
-			ROR Bx, y ;
-			ROR Wx, y ;
-			RCL Bx, y ;
-			RCL Wx, y ;
-			RCR Bx, y ;
-			RCR Wx, y ;
+			SHL Bx, y ; Binary y bits shift left the value of register Bx. Result stored in Bx. y value can be 1, 2, 4 or 8
+			SHL Wx, y ; Binary y bits shift left the value of register Wx. Result stored in Wx. y value can be 1, 2, 4 or 8
+			SHR Bx, y ; Binary y bits shift right the value of register Bx. Result stored in Bx. y value can be 1, 2, 4 or 8
+			SHR Wx, y ; Binary y bits shift right the value of register Wx. Result stored in Wx. y value can be 1, 2, 4 or 8
+			SAR Bx, y ; Arithmetic y bit shift right the value of register Bx. Result stored in Bx. y value can be 1, 2, 4 or 8
+			SAR Wx, y ; Arithmetic y bit shift right the value of register Wx. Result stored in Wx. y value can be 1, 2, 4 or 8
+			ROL Bx, y ; Rotate y bits to the left the value of register Bx. Result stored in Bx. y value can be 1, 2, 4 or 8
+			ROL Wx, y ; Rotate y bits to the left the value of register Wx. Result stored in Wx. y value can be 1, 2, 4 or 8
+			ROR Bx, y ; Rotate y bits to the right the value of register Bx. Reult stored in Bx. y value can be 1, 2 ,4 or 8
+			ROR Wx, y ; Rotate y bits to the right the value of register Wx. Reult stored in Wx. y value can be 1, 2 ,4 or 8
+			RCL Bx, y ; Rotate y bits to the left the value of register Bx including Carry flag in the bit ring. Result stored in Bx. y value can be 1, 2, 4 or 8
+			RCL Wx, y ; Rotate y bits to the left the value of register Wx including Carry flag in the bit ring. Result stored in Wx. y value can be 1, 2, 4 or 8
+			RCR Bx, y ; Rotate y bits to the right the value of register Bx including Carry flag in the bit ring. Result stored in Bx. y value can be 1, 2, 4 or 8
+			RCR Wx, y ; Rotate y bits to the left the value of register Wx including Carry flag in the bit ring. Result stored in Bx. y value can be 1, 2, 4 or 8
 		Assembler examples : 
 			SHL B5, 2 ;
 			SHL W7, 8 ;
